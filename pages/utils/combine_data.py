@@ -5,8 +5,8 @@ DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "cleaned_accid
 
 def combine_data(on: str = "STATE", how: str = "left"):
     """Combines weather and state coordinates datasets."""
-    df1 = pd.read_csv(os.path.join(os.path.dirname(__file__), "..", "data", "weather_accidents.csv"))
-    df2 = pd.read_csv(os.path.join(os.path.dirname(__file__), "..", "data", "state_coordinates.csv"))
+    df1 = pd.read_csv(os.path.join(os.path.dirname(__file__), "data", "weather_accidents.csv"))
+    df2 = pd.read_csv(os.path.join(os.path.dirname(__file__), "data", "state_coordinates.csv"))
     
     combined_df = pd.merge(df1, df2, on=on, how=how)
     combined_df.to_csv(DATA_PATH, index=False)
