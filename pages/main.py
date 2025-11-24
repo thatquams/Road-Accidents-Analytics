@@ -1,6 +1,9 @@
 
 import streamlit as st
-
+from analysis_page import run_analysis_page
+from map_analysis_page import run_map_analysis
+from predictions_page import run_predictions_page
+# from pages import map_analysis_page 
 # Page configuration
 st.set_page_config(
     page_title="Accident Prevention Dashboard",
@@ -39,14 +42,14 @@ analysis, map_analysis, predicions = st.tabs(["Analysis", "Map Analysis", "Predi
 
 with analysis:
     # Import and run Analysis page
-    exec(open('analysis_page.py').read())
+    run_analysis_page()
     
 with map_analysis:
     # Import and run Map Analysis page
-    exec(open('map_analysis_page.py').read())
+    run_map_analysis()
     
 
 with predicions:
     # Import and run Predictions page
-    exec(open('predictions_page.py').read())
+    run_predictions_page()
  
