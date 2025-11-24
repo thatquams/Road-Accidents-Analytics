@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "cleaned_accidents_data.csv")
+DATA_PATH = os.path.join(os.path.dirname(__file__), "data", "cleaned_accidents_data.csv")
 
 # def combine_data(on: str = "STATE", how: str = "left"):
 #     """Combines weather and state coordinates datasets."""
