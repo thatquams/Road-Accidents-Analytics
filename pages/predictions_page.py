@@ -1,0 +1,162 @@
+import streamlit as st
+from utils.combine_data import road_accidents_csv
+import joblib
+import os
+import pandas as pd
+
+
+
+ # Load pre-trained model and encoder
+load_model = joblib.load("../data/svc_best_model.pkl")
+state_encoder = joblib.load("../data/state_encoder.pkl")
+scaler = joblib.load("../data/scaler.pkl")
+
+
+def prediction_ui():
+    
+    """
+        Launches an interactive Streamlit user interface for predicting road accident severity.
+
+        This UI allows users to input relevant factors that contribute to road accidents, including:
+
+        1. **Causative Factors** (Driver, Mechanical, Environment, Road, Vehicle)  
+        - Users provide a value between 0 and 1 to indicate the contribution level of each factor.
+
+        2. Temporal Features
+        - Year of accident (2025 or later)  
+        - Quarter of the year (1-4)
+
+        3. Weather Conditions
+        - Cloud amount (%), soil wetness, precipitation, surface pressure, specific humidity,  
+            dew/frost point, earth skin temperature, wind direction, wind speed  
+
+        4. State Selection
+        - Users select the Nigerian state where the accident occurred.  
+
+        Function Workflow:
+        - Collect user inputs for causative, temporal, weather, and state features.
+        - Encode categorical 'STATE' feature using a pre-trained TargetEncoder.
+        - Standardize numeric features using a pre-trained StandardScaler.
+        - Load the pre-trained Support Vector Classifier (SVC) model.
+        - Predict accident severity as either 'LOW RISK' or 'HIGH RISK'.
+        - Display the input data and the predicted severity level interactively.
+    """
+    
+    st.title("Road Accident Severity Prediction")
+
+    #  Field Instructions
+    with st.expander("Instructions for Each Field  (kindly read before making selections)"):
+        st.markdown("""
+        ### Causative Factors (0 - 1)
+        **Choose a value between 0 and 1 for each factor, reflecting its contribution to the accident.**  
+        - **Driver:** Human Factors (Speed Violation, Overloading, Dangerous Overtaking, Wrongful Overtaking, Dangerous Driving, Sleeping on Steering, Driving Under Alcohol/Drug Influence).  
+        _Select a higher value (closer to 1) if these factors significantly contributed to the accident._  
+        - **Mechanical:** Vehicle mechanical issues (Brake Failure, Mechanically Deficient Vehicle, Tyre Burst, Bad Road).  
+        _Use a higher value if mechanical problems were a major cause._  
+        - **Environment:** Environmental or weather conditions (Road Obstruction Violation, Poor Weather, Fatigue).  
+        _Assign a higher value if environmental factors played a strong role._  
+        - **Road:** Road condition or infrastructure issues (Route Violation, Sign Light Violation).  
+        _Higher value indicates poor road conditions contributed to the accident._  
+        - **Vehicle:** Vehicle type or condition contribution (Tyre Burst).  
+        _Select a value based on how much vehicle condition influenced the accident._  
+
+        **Year & Quarter:**  
+        - **Year:** Year of the accident (2025 or above).  
+        - **Quarter:** Quarter of the year (1-4).  
+
+        **Weather Conditions:**  
+        - **Cloud Amount (%):** Cloud coverage percentage.  
+        - **Surface Soil Wetness (1):** Soil wetness index (0-1).  
+        - **Precipitation (mm/day):** Daily precipitation in mm.  
+        - **Surface Pressure (kPa):** Atmospheric surface pressure.  
+        - **Specific Humidity (g/kg):** Humidity at 2 meters.  
+        - **Dew/Frost Point (°C):** Dew or frost point temperature.  
+        - **Earth Skin Temperature (°C):** Temperature of the earth surface.  
+        - **Wind Direction (°):** Wind direction in degrees.  
+        - **Wind Speed (m/s):** Wind speed at 2 meters.  
+
+        **State:**  
+        - Select the Nigerian state where the accident occurred.
+            """)
+    # Causative factors (0-1)
+    DRIVER = st.slider("Driver Factor (0-1)", 0.0, 1.0, 0.5)
+    MECHANICAL = st.slider("Mechanical Factor (0-1)", 0.0, 1.0, 0.5)
+    ENVIRONMENT = st.slider("Environment Factor (0-1)", 0.0, 1.0, 0.5)
+    ROAD = st.slider("Road Factor (0-1)", 0.0, 1.0, 0.5)
+    VEHICLE = st.slider("Vehicle Factor (0-1)", 0.0, 1.0, 0.5)
+
+    # Year & Quarter
+    YEAR = st.number_input("Year", min_value=2025, max_value=2100, value=2025)
+    QUARTER = st.selectbox("Quarter", options=[1, 2, 3, 4])
+
+    # Weather features inside expander
+    with st.expander("Weather Conditions"):
+        col1, col2 = st.columns(2)
+
+        with col1:
+            cloud_amt = st.number_input("Cloud Amount (%)", value=50.0)
+            soil_wet = st.number_input("Surface Soil Wetness (1)", value=0.5)
+            precip = st.number_input("Precipitation (mm/day)", value=1.0)
+            pressure = st.number_input("Surface Pressure (kPa)", value=101.0)
+            humidity = st.number_input("Specific Humidity (g/kg)", value=10.0)
+
+        with col2:
+            dew_point = st.number_input("Dew/Frost Point (°C)", value=15.0)
+            earth_temp = st.number_input("Earth Skin Temp (°C)", value=25.0)
+            wind_dir = st.number_input("Wind Direction (°)", min_value=0.0, max_value=360.0, value=180.0)
+            wind_speed = st.number_input("Wind Speed (m/s)", value=2.0)
+    # State selection
+    STATE = st.selectbox("STATE", options=road_accidents_csv['STATE'].unique().tolist())
+
+    if st.button("Predict Accident Severity"):
+        # Prepare input DataFrame
+        input_df = pd.DataFrame([{
+            "DRIVER": DRIVER,
+            "MECHANICAL": MECHANICAL,
+            "ENVIRONMENT": ENVIRONMENT,
+            "ROAD": ROAD,
+            "VEHICLE": VEHICLE,
+            "deg Cloud Amount (%)": cloud_amt,
+            "Surface Soil Wetness (1)": soil_wet,
+            "Precipitation Corrected (mm/day)": precip,
+            "Surface Pressure (kPa)": pressure,
+            "Specific Humidity at 2 Meters (g/kg)": humidity,
+            "Dew/Frost Point at 2 Meters (C)": dew_point,
+            "Earth Skin Temperature (C)": earth_temp,
+            "Wind Direction at 2 Meters (Degrees)": wind_dir,
+            "Wind Speed at 2 Meters (m/s)": wind_speed,
+            "YEAR": YEAR,
+            "QUARTER": QUARTER,
+            "STATE": STATE
+        }])
+
+        st.json(input_df.to_dict(orient="records")[0])
+
+        # Encode STATE
+        input_df["STATE_TE"] = state_encoder.transform(input_df[["STATE"]])
+
+        # Normalize weather columns using training stats
+        weather_cols = [
+            "deg Cloud Amount (%)",
+            "Surface Soil Wetness (1)",
+            "Precipitation Corrected (mm/day)",
+            "Surface Pressure (kPa)",
+            "Specific Humidity at 2 Meters (g/kg)",
+            "Dew/Frost Point at 2 Meters (C)",
+            "Earth Skin Temperature (C)",
+            "Wind Direction at 2 Meters (Degrees)",
+            "Wind Speed at 2 Meters (m/s)"
+        ]
+        # Encode STATE
+        input_df["STATE_TE"] = state_encoder.transform(input_df[["STATE"]])
+        input_df = input_df.drop("STATE", axis=1)
+
+        # Scale features
+        input_df[input_df.columns] = scaler.transform(input_df[input_df.columns])
+
+        # Predict
+        prediction = load_model.predict(input_df)
+        risk_map = {0: "LOW RISK", 1: "HIGH RISK"}
+        st.success(f"Predicted Accident Severity: {risk_map.get(prediction[0], 'UNKNOWN')}")
+
+prediction_ui()
