@@ -3,11 +3,16 @@ import streamlit as st
 import pandas as pd
 import joblib
 from utils.combine_data import road_accidents_csv
+import os
+
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "../data/svc_best_model.pkl")
+STATE_ENCODER_PATH = os.path.join(os.path.dirname(__file__), "../data/state_encoder.pkl")
+SCALER_PATH = os.path.join(os.path.dirname(__file__), "../data/scaler.pkl")
 
 # Load pre-trained model and encoders/scalers
-load_model = joblib.load("../data/svc_best_model.pkl")
-state_encoder = joblib.load("../data/state_encoder.pkl")
-scaler = joblib.load("../data/scaler.pkl")
+load_model = joblib.load(MODEL_PATH)
+state_encoder = joblib.load(STATE_ENCODER_PATH)
+scaler = joblib.load(SCALER_PATH)
 
 
 def run_predictions_page():
