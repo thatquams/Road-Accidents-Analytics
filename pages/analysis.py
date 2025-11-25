@@ -76,7 +76,7 @@ def plot_chart_based_on_inputs(category, aggregate_column, agg_method, chart_typ
         if display and fig:
             st.plotly_chart(fig, use_container_width=True)
 
-        return fig
+        return result_data, fig
 
     except Exception as e:
         st.error(f"Error processing data: {e}")

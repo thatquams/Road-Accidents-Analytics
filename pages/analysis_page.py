@@ -25,8 +25,12 @@ def run_analysis_page():
                                   index=None, placeholder="Select chart")
 
     if cat and agg_col and agg and chart_type:
-        fig = plot_chart_based_on_inputs(cat, agg_col, agg, chart_type)
-        st.pyplot(fig)
+        # fig = plot_chart_based_on_inputs(cat, agg_col, agg, chart_type)
+        result_data, fig = plot_chart_based_on_inputs(cat, agg_col, agg, chart_type)
+
+        if fig:
+            st.plotly_chart(fig, use_container_width=True)
+        # st.pyplot(fig)
     else:
         st.info("Choose all options to generate a chart.")
         
