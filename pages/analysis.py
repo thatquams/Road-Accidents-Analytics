@@ -29,7 +29,7 @@ def plot_chart_based_on_inputs(category, aggregate_column, agg_method, chart_typ
             result_data = data.groupby(category)[aggregate_column].mean().reset_index()
         else:
             st.error("Invalid aggregation method.")
-            return None, None
+            return None
 
         if result_data.empty:
             st.warning("No data available for the selected options.")
@@ -76,7 +76,7 @@ def plot_chart_based_on_inputs(category, aggregate_column, agg_method, chart_typ
         if display and fig:
             st.plotly_chart(fig, use_container_width=True)
 
-        return result_data, fig
+        return fig
 
     except Exception as e:
         st.error(f"Error processing data: {e}")
