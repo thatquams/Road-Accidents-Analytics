@@ -5,7 +5,7 @@ import joblib
 from utils.combine_data import road_accidents_csv
 import os
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "utils/data/gradient_boosting.pkl")
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "utils/data/svc_model.pkl")
 STATE_ENCODER_PATH = os.path.join(os.path.dirname(__file__), "utils/data/state_encoder.pkl")
 SCALER_PATH = os.path.join(os.path.dirname(__file__), "utils/data/scaler.pkl")
 
@@ -76,7 +76,7 @@ def run_predictions_page():
     MECHANICAL = st.slider("Mechanical Factor (0-1)", 0.0, 1.0, 0.5)
     ENVIRONMENT = st.slider("Environment Factor (0-1)", 0.0, 1.0, 0.5)
     ROAD = st.slider("Road Factor (0-1)", 0.0, 1.0, 0.5)
-    VEHICLE = st.slider("Vehicle Factor (0-1)", 0.0, 1.0, 0.5)
+    # VEHICLE = st.slider("Vehicle Factor (0-1)", 0.0, 1.0, 0.5)
 
     # Year & Quarter
     YEAR = st.number_input("Year", min_value=2025, max_value=2100, value=2025)
@@ -107,7 +107,7 @@ def run_predictions_page():
             "MECHANICAL": MECHANICAL,
             "ENVIRONMENT": ENVIRONMENT,
             "ROAD": ROAD,
-            "VEHICLE": VEHICLE,
+            # "VEHICLE": VEHICLE,
             "deg Cloud Amount (%)": cloud_amt,
             "Surface Soil Wetness (1)": soil_wet,
             "Precipitation Corrected (mm/day)": precip,
