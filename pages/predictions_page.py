@@ -94,7 +94,7 @@ def run_predictions_page():
             dew_point = st.number_input("Dew/Frost Point (°C)", value=15.0)
             earth_temp = st.number_input("Earth Skin Temp (°C)", value=35.0)
             wind_dir = st.number_input("Wind Direction (°)", min_value=0.0, max_value=360.0, value=180.0)
-            wind_speed = st.number_input("Wind Speed (m/s)", value=1.5)
+            wind_speed = st.number_input("Wind Speed (m/s)", value=2.5)
 
     # State selection
     STATE = st.selectbox("STATE", options=road_accidents_csv['STATE'].unique().tolist())
