@@ -72,10 +72,10 @@ def run_predictions_page():
             """)
 
     # Causative factors
-    DRIVER = st.slider("Driver Factor (0-1)", 0.0, 1.0, 0.5)
-    MECHANICAL = st.slider("Mechanical Factor (0-1)", 0.0, 1.0, 0.5)
-    ENVIRONMENT = st.slider("Environment Factor (0-1)", 0.0, 1.0, 0.5)
-    ROAD = st.slider("Road Factor (0-1)", 0.0, 1.0, 0.5)
+    DRIVER = st.slider("Driver Factor (0-1)", 0.00, 1.0, 0.5)
+    MECHANICAL = st.slider("Mechanical Factor (0-1)", 0.00, 1.0, 0.5)
+    ENVIRONMENT = st.slider("Environment Factor (0-1)", 0.00, 1.0, 0.5)
+    ROAD = st.slider("Road Factor (0-1)", 0.00, 1.0, 0.5)
 
     # Year & Quarter
     YEAR = st.number_input("Year", min_value=2020, max_value=2100, value=2020)
