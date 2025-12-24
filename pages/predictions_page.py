@@ -78,7 +78,7 @@ def run_predictions_page():
     ROAD = st.slider("Road Factor (0-1)", 0.0, 1.0, 0.5)
 
     # Year & Quarter
-    YEAR = st.number_input("Year", min_value=2021, max_value=2100, value=2026)
+    YEAR = st.number_input("Year", min_value=2020, max_value=2100, value=2020)
     QUARTER = st.selectbox("Quarter", options=[1, 2, 3, 4])
 
     # Weather conditions
