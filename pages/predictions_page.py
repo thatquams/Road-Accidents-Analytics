@@ -79,7 +79,7 @@ def run_predictions_page():
 
     # Year & Quarter
     YEAR = st.number_input("Year", min_value=2021, max_value=2100, value=2026)
-    QUARTER = st.selectbox("Quarter", options=[1, 2, 3, 4])
+    QUARTER = st.selectbox("Quarter", options=[1, 2, 3, 4], value=4)
 
     # Weather conditions
     with st.expander("Weather Conditions"):
