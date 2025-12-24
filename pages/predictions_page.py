@@ -85,16 +85,16 @@ def run_predictions_page():
     with st.expander("Weather Conditions"):
         col1, col2 = st.columns(2)
         with col1:
-            cloud_amt = st.number_input("Cloud Amount (%)", value=50.0)
-            soil_wet = st.number_input("Surface Soil Wetness (1)", value=0.5)
-            precip = st.number_input("Precipitation (mm/day)", value=1.0)
+            cloud_amt = st.number_input("Cloud Amount (%)", value=30.0)
+            soil_wet = st.number_input("Surface Soil Wetness (1)", value=10.0)
+            precip = st.number_input("Precipitation (mm/day)", value=2.0)
             pressure = st.number_input("Surface Pressure (kPa)", value=101.0)
             humidity = st.number_input("Specific Humidity (g/kg)", value=10.0)
         with col2:
             dew_point = st.number_input("Dew/Frost Point (°C)", value=15.0)
-            earth_temp = st.number_input("Earth Skin Temp (°C)", value=25.0)
+            earth_temp = st.number_input("Earth Skin Temp (°C)", value=35.0)
             wind_dir = st.number_input("Wind Direction (°)", min_value=0.0, max_value=360.0, value=180.0)
-            wind_speed = st.number_input("Wind Speed (m/s)", value=2.0)
+            wind_speed = st.number_input("Wind Speed (m/s)", value=1.5)
 
     # State selection
     STATE = st.selectbox("STATE", options=road_accidents_csv['STATE'].unique().tolist())
