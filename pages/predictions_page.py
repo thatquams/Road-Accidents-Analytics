@@ -5,9 +5,12 @@ import joblib
 from utils.combine_data import road_accidents_csv
 import os
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "utils/data/svc_best_model.pkl")
-STATE_ENCODER_PATH = os.path.join(os.path.dirname(__file__), "utils/data/state_encoders.pkl")
-SCALER_PATH = os.path.join(os.path.dirname(__file__), "utils/data/feature_scaler.pkl")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MODEL_PATH = os.path.join(BASE_DIR, "utils/data/svc_best_model.pkl")
+STATE_ENCODER_PATH = os.path.join(BASE_DIR, "utils/data/state_encoders.pkl")
+SCALER_PATH = os.path.join(BASE_DIR, "utils/data/feature_scaler.pkl")
 
 # Load pre-trained model and encoders/scalers
 load_model = joblib.load(MODEL_PATH)
